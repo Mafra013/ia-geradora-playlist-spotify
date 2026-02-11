@@ -1,0 +1,6 @@
+# .gitignore
+node_modules/
+.env
+.cache-spotify
+.venv
+__pycache__
