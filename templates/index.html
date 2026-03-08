@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset = "UTF-8">
+<title>Spotify IA Playlist</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>Spotify IA Playlist</h1>
+
+<input id="pedido" placeholder="Ex: Sertanejo para churrasco">
+<button onclick="gerarPlaylist()">Gerar Playlist</button>
+
+<div id="resultado"></div>
+
+<script>
+
+async function gerarPlaylist() {
+
+    const pedido = document.getElementById("pedido").value;
+    
+    const res = await fetch("/generate", {
+        method: "POST",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ pedido })
+    })
+
+    const data = await res.json()
+
+    if(data.link){
+        document.getElementById("resultado").innerHTML =
+        `Playlist criada com ${data.quantidade} músicas!<br>
+        <a href="${data.link}" target="_blank">Abrir no Spotify</a>`
+    }else{
+        document.getElementById("resultado").innerText = data.error
+    }   
+}
+
+</script>
+
+</body>
+</html>

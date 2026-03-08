@@ -18,30 +18,25 @@ class PlaylistBrain:
 
     def generate_list(self, user_request, user_profile):
         prompt = f"""
-        Atue como um Curador Musical de Alta Performance (DJ & Music Critic).
-        
-        CONTEXTO DO USUÁRIO:
-        - Artistas Favoritos: {user_profile['artists']}
-        - Gêneros Favoritos: {user_profile['genres']}
-        
-        PEDIDO ATUAL: "{user_request}"
-        
-        SUA LÓGICA DE CURADORIA:
-        1. ANÁLISE DE INTENÇÃO:
-           - O pedido é um GÊNERO (ex: "Sertanejo") ou um MOOD (ex: "Jantar Romântico")?
-           
-        2. O FATOR "MATCH":
-           - Verifique se o histórico do usuário (Artistas/Gêneros) combina com o PEDIDO.
-           - SIM (Combina): Use os artistas favoritos dele como BASE e adicione novidades do mesmo estilo.
-           - NÃO (Não combina): Ignore o histórico! Se ele pediu "Jazz" e só ouve "Funk", entregue os maiores clássicos do Jazz. Não force misturas bizarras.
+        Atue como um Curador Musical de Elite (DJ & Music Critic). Sua missão é criar a playlist perfeita para o pedido abaixo.
 
-        3. REGRAS DE OURO:
-           - Se for um MOOD (ex: "Academia"), foque na ENERGIA (BPM alto), independente do gênero, mas priorizando o gosto dele se couber.
-           - Se for GÊNERO (ex: "Trap"), mantenha a pureza do estilo.
-           - Evite repetir o mesmo artista mais de 2 vezes, a menos que o pedido seja específico sobre ele.
-        
+        --- PEDIDO DO USUÁRIO (PRIORIDADE TOTAL) ---
+        "{user_request}"
+
+        --- PERFIL DO USUÁRIO (USE APENAS COMO DIREÇÃO/ESTILO) ---
+        - Músicas recentes: {user_profile['recent_vibe']}
+        - Artistas que gosta: {user_profile['top_artists']}
+        - Gêneros predominantes: {user_profile['genres']}
+
+        LÓGICA DE CURADORIA:
+        1. O PEDIDO É A REGRA: Se o usuário pediu "Trap para Academia", entregue Trap real e pesado. Não importa se ele ouve "MPB" no perfil dele, foque no Trap.
+        2. PERFIL COMO FILTRO DE ESTILO: Use o perfil dele apenas para entender se ele prefere algo mais moderno, clássico, "underground" ou comercial.
+        3. PROIBIDO ALUCINAR: Não invente nomes de artistas ou músicas. Use apenas artistas reais, verificados e influentes no gênero solicitado.
+        4. DESCOBERTA MUSICAL: Misture artistas que ele conhece (30%) com excelentes sugestões novas que ele provavelmente amaria dentro do tema (70%).
+        5. DIVERSIDADE: Limite de no máximo 2 faixas por artista.
+
         OBJETIVO:
-        Gerar uma lista de exatamente {PLAYLIST_LIMIT} músicas.
+        Gerar uma lista de exatamente {PLAYLIST_LIMIT} músicas reais em JSON.
         """
 
         try:

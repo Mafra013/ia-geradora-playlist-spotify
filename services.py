@@ -17,21 +17,28 @@ class SpotifyService:
 
     def get_profile_summary(self):
         try:
-            # Pega top artistas (médio prazo)
-            top = self.sp.current_user_top_artists(limit=15, time_range='medium_term')
-            artists = [item['name'] for item in top['items']]
+            # Pega as 20 músicas mais ouvidas nas últimas semanas (vibe atual)
+            top_tracks = self.sp.current_user_top_tracks(limit=20, time_range='short_term')
             
-            # Extrai gêneros desses artistas
-            genres = set()
-            for item in top['items']:
-                genres.update(item.get('genres', []))
+            # Pega os 10 artistas favoritos de médio prazo
+            top_artists = self.sp.current_user_top_artists(limit=10, time_range='medium_term')
+            
+            # Cria uma string com exemplos reais do que o usuário curte
+            vibe_recente = [f"{t['name']} ({t['artists'][0]['name']})" for t in top_tracks['items']]
+            nomes_artistas = [a['name'] for a in top_artists['items']]
+            
+            generos = set()
+            for a in top_artists['items']:
+                generos.update(a.get('genres', []))
             
             return {
-                "artists": ", ".join(artists),
-                "genres": ", ".join(list(genres)[:10])
+                "recent_vibe": ", ".join(vibe_recente[:15]),
+                "top_artists": ", ".join(nomes_artistas),
+                "genres": ", ".join(list(generos)[:10])
             }
-        except:
-            return {"artists": "Indefinido", "genres": "Indefinido"}
+        except Exception as e:
+            print(f"Erro ao capturar perfil: {e}")
+            return {"recent_vibe": "Indefinido", "top_artists": "Indefinido", "genres": "Indefinido"}
 
     def search_track_uri(self, artist, song):
         # 1. Busca
